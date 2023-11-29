@@ -1,5 +1,4 @@
 const express = require('express')
-const axios = require('axios');
 
 const app = express()
 const PORT = 5000
@@ -8,21 +7,33 @@ const PORT = 5000
 app.use(express.json())
 
 app.get("/name", async (req, res) => {
-    try {
-        const { name } = req.query
+    const { name } = req.query
+    console.log(name === undefined || name.trim() === "")
+    var endpoint = (name === undefined || name.trim() === "") ? `https://restcountries.com/v3.1/all?fields=name,` : `https://restcountries.com/v3.1/name/${name.trim()}?fields=name`
 
-        // Axios is used to make the HTTP request.
-        const externalApiResponse = await axios.get(`https://restcountries.com/v3.1/name/${name}`)
-        const responseData = externalApiResponse.data
+    fetch(endpoint)
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 404) {
+                    return [];
+                } else {
+                    throw new Error(`Request failed with status: ${response.status}`);
+                }
+            }
+            return response.json();
+        })
+        .then(response => {
+            res.json({ "names": response.map(element => element.name.common) });
+        })
+        .catch(error => {
+            console.error('Error:', error.message);
+            res.status(500).json({ error: 'Internal Server Error' });
+        });
 
-        // TODO: iterate responseData and extract the name of each country.
 
-        res.json(responseData) // Data sent.
 
-    } catch (error) {
-        console.error('Error:', error.message)
-        res.status(500).json({ error: 'Internal Server Error' })
-    }
+
+
 })
 
 
