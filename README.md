@@ -47,10 +47,6 @@ This project is a React frontend application that communicates with a NodeJS bac
 
 The application is deployed on Vercel. Access it at https://vercel-app-frontend-seven.vercel.app/.
 
-### Loading Display Logic
-
-Loading indicators are displayed during API requests to enhance user experience.
-
 ### Error Handling
 
 The application handles errors gracefully and provides feedback to the user.
