@@ -35,7 +35,7 @@ const HomePage = () => {
                     value={inputText}
                     onChange={handleInputChange}
                     onKeyPress={handleEnterKeyPress}
-                    placeholder="Escribe aquí..."
+                    placeholder="Country name"
                 />
             </div>
             <div>
