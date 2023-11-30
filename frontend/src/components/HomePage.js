@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './HomePage.css';
 
 const HomePage = () => {
     const [inputText, setInputText] = useState('');
     const [results, setResults] = useState([]);
 
-    // Handle changes in input
     const handleInputChange = (event) => {
         const newText = event.target.value;
         setInputText(newText);
 
-        // Call to endpoint with current text
-        fetch(`http://localhost:5000/name?name=${newText}`)
+        fetch(`/name?name=${newText}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -22,6 +21,12 @@ const HomePage = () => {
             .catch(error => console.error('Error fetching data:', error));
     };
 
+    const handleEnterKeyPress = (event) => {
+        if (event.key === 'Enter' && results.length > 0) {
+            window.location.href = `/countries/${results[0]}`;
+        }
+    };
+
     return (
         <div>
             <div>
@@ -29,21 +34,20 @@ const HomePage = () => {
                     type="text"
                     value={inputText}
                     onChange={handleInputChange}
-                    placeholder="Write here..."
+                    onKeyPress={handleEnterKeyPress}
+                    placeholder="Escribe aquí..."
                 />
             </div>
             <div>
-                {inputText && (
-                    <ul>
-                        {results.map((result, index) => (
-                            <li key={index}>
-                                <a href={`https://www.ejemplo.com/${result}`} target="_blank" rel="noopener noreferrer">
-                                    {result}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                )}
+                <ul>
+                    {results.map((result, index) => (
+                        <li key={index}>
+                            <Link to={`/countries/${result}`}>
+                                {result}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
             </div>
         </div>
     );
